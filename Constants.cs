@@ -8,6 +8,6 @@ namespace dreamClock
 {
     internal class Constants
     {
-        public static string connection = "Data Source=DESKTOP-0ANVP6M\\PLSWORK;Initial Catalog=master;Integrated Security=True";
+        public static string connection = "Data Source=DESKTOP-0ANVP6M;Initial Catalog=IT488_Tech_Solutions;Integrated Security=True";
     }
 }
