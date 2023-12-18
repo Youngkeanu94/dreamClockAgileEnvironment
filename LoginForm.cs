@@ -60,8 +60,10 @@ namespace dreamClock
                             if (count > 0)
                             {
                                 MessageBox.Show("Login Successful");
-                                LoginForm frm1 = new LoginForm();
-                                frm1.Show();
+                                MainForm mainForm = new MainForm();
+                                mainForm.Show();
+                                //Closes LoginForm
+                                this.Close();
                             }
                             else
                             {
@@ -74,7 +76,6 @@ namespace dreamClock
                         MessageBox.Show("Error: " + ex.Message);
                     }
                 }
-
             }
         }
 
