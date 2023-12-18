@@ -40,9 +40,15 @@ namespace dreamClock
             }
             else
             {
-                var datasource = @"DESKTOP-0ANVP6M\SQLEXPRESS";
+                var datasource = @"DESKTOP-0ANVP6M";
                 var database = "IT488_Tech_Solutions";
                 var connString = $"Data Source={datasource};Initial Catalog={database};Integrated Security=True";
+                // If you are using SQL server authenication enter username & password 
+                //var username = "yourUsername";
+                //var password = "yourPassword";
+                
+
+
 
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
