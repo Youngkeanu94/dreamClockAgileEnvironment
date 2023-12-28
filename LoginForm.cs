@@ -9,11 +9,15 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace dreamClock
 {
     public partial class LoginForm : Form
     {
+        public bool LoginSuccessful { get; private set; }
+
+
         public LoginForm()
         {
             InitializeComponent();
@@ -46,7 +50,7 @@ namespace dreamClock
                 // If you are using SQL server authenication enter username & password 
                 //var username = "yourUsername";
                 //var password = "yourPassword";
-                
+
 
 
 
@@ -61,19 +65,21 @@ namespace dreamClock
                             cmd.Parameters.AddWithValue("@username", username);
                             cmd.Parameters.AddWithValue("@password", password);
 
-                            int count = (int)cmd.ExecuteScalar();
+                            
 
+                            int count = (int)cmd.ExecuteScalar();
                             if (count > 0)
                             {
                                 MessageBox.Show("Login Successful");
-                                MainForm mainForm = new MainForm();
-                                mainForm.Show();
-                                //Closes LoginForm
-                                this.Close();
+                                this.LoginSuccessful = true;
+                                this.DialogResult = DialogResult.OK; // This line is important to signal success
+                                this.Close(); // Close the login form
                             }
                             else
                             {
                                 MessageBox.Show("Invalid username or password.");
+                                this.LoginSuccessful = false;
+                                this.DialogResult = DialogResult.None; // This line signals that the login was not successful
                             }
                         }
                     }
@@ -90,6 +96,13 @@ namespace dreamClock
         {
             Regex regex = new Regex("^[a-zA-Z0-9_]*$");
             return regex.IsMatch(input);
+        }
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            // Close the form
+            this.Close();
+
         }
     }
 
