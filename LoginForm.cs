@@ -1,97 +1,94 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace dreamClock
 {
     public partial class LoginForm : Form
     {
         public bool LoginSuccessful { get; private set; }
-
+        public int UserRoleID { get; private set; }
+        public bool IsUserCEO { get; private set; } // Property to determine if the user is a CEO
 
         public LoginForm()
         {
             InitializeComponent();
         }
 
-        public static string username = "";
-        public static string password = "";
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            username = userNameTxt.Text;
-            password = passwordTxt.Text;
+            string username = userNameTxt.Text;
+            string password = passwordTxt.Text;
 
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 MessageBox.Show("Please enter your username and password.");
+                return;
             }
-            else if (password.Length < 8)
+
+            if (password.Length < 8)
             {
                 MessageBox.Show("Password must be at least 8 characters in length.");
+                return;
             }
-            else if (!IsValidInput(username) || !IsValidInput(password))
+
+            if (!IsValidInput(username) || !IsValidInput(password))
             {
                 MessageBox.Show("Username and password cannot contain special characters.");
+                return;
             }
-            else
+
+            AttemptLogin(username, password);
+        }
+
+        private void AttemptLogin(string username, string password)
+        {
+            var datasource = @"DESKTOP-0ANVP6M";
+            var database = "IT488_Tech_Solutions";
+            var connString = $"Data Source={datasource};Initial Catalog={database};Integrated Security=True";
+
+            using (var conn = new SqlConnection(connString))
             {
-                var datasource = @"DESKTOP-0ANVP6M";
-                var database = "IT488_Tech_Solutions";
-                var connString = $"Data Source={datasource};Initial Catalog={database};Integrated Security=True";
-                // If you are using SQL server authenication enter username & password 
-                //var username = "yourUsername";
-                //var password = "yourPassword";
-
-
-
-
-                using (SqlConnection conn = new SqlConnection(connString))
+                try
                 {
-                    try
+                    conn.Open();
+                    // Adjusted to include RoleID in the SELECT to check for CEO role later
+                    string sql = "SELECT EmployeeID, RoleID FROM Employees WHERE Username = @username AND Password = @password";
+
+                    using (var cmd = new SqlCommand(sql, conn))
                     {
-                        conn.Open();
-                        string sql = "SELECT COUNT(*) FROM Login WHERE Username = @username AND Password = @password";
-                        using (SqlCommand cmd = new SqlCommand(sql, conn))
+                        cmd.Parameters.AddWithValue("@username", username);
+                        cmd.Parameters.AddWithValue("@password", password);
+
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            cmd.Parameters.AddWithValue("@username", username);
-                            cmd.Parameters.AddWithValue("@password", password);
-
-                            
-
-                            int count = (int)cmd.ExecuteScalar();
-                            if (count > 0)
+                            if (reader.Read())
                             {
                                 MessageBox.Show("Login Successful");
                                 this.LoginSuccessful = true;
-                                this.DialogResult = DialogResult.OK; // This line is important to signal success
-                                this.Close(); // Close the login form
+                                this.UserRoleID = reader.GetInt32(reader.GetOrdinal("RoleID"));
+                                // Check if the logged-in user is a CEO
+                                // Assuming that the CEO's RoleID is known, e.g., 1
+                                this.IsUserCEO = this.UserRoleID == 1;
+                                this.DialogResult = DialogResult.OK; // Signal success
                             }
                             else
                             {
                                 MessageBox.Show("Invalid username or password.");
                                 this.LoginSuccessful = false;
-                                this.DialogResult = DialogResult.None; // This line signals that the login was not successful
+                                this.DialogResult = DialogResult.None; // Signal failure
                             }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error: " + ex.Message);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
                 }
             }
         }
 
-        // Function to validate input (allow only letters, numbers, and underscore)
         private bool IsValidInput(string input)
         {
             Regex regex = new Regex("^[a-zA-Z0-9_]*$");
@@ -100,11 +97,8 @@ namespace dreamClock
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
-            // Close the form
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
-
         }
     }
-
 }
- 

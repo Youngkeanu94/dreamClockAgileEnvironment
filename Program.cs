@@ -8,9 +8,6 @@ namespace dreamClock
 {
     internal static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
@@ -20,15 +17,21 @@ namespace dreamClock
             using (LoginForm loginForm = new LoginForm())
             {
                 DialogResult result = loginForm.ShowDialog();
-                if (result == DialogResult.OK)  // ShowDialog is used to display the login form as a modal dialog box
+                if (result == DialogResult.OK) // Just check if DialogResult is OK
                 {
-                    Application.Run(new MainForm()); // Only run MainForm if login is successful
+                    // Assuming you have a way to determine if the logged-in user is a CEO inside LoginForm
+                    // For example, loginForm.IsUserCEO could be a property you set after successful login based on their role
+                    bool isCEO = loginForm.IsUserCEO;
+
+                    // Pass both the UserRoleID and isCEO flag to MainForm
+                    MainForm mainForm = new MainForm(loginForm.UserRoleID, isCEO);
+                    Application.Run(mainForm);
                 }
                 // If ShowDialog doesn't return DialogResult.OK, the application will end
-
             }
         }
     }
 }
+
 
 
