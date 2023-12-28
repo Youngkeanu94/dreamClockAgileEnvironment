@@ -71,6 +71,7 @@ namespace dreamClock
                                 // Check if the logged-in user is a CEO
                                 // Assuming that the CEO's RoleID is known, e.g., 1
                                 this.IsUserCEO = this.UserRoleID == 1;
+                                //need to add HR method to program.cs & mainform
                                 this.DialogResult = DialogResult.OK; // Signal success
                             }
                             else
