@@ -86,6 +86,7 @@
             // 
             // cancelButton
             // 
+            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancelButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cancelButton.Location = new System.Drawing.Point(265, 183);
             this.cancelButton.Name = "cancelButton";
@@ -97,15 +98,21 @@
             // 
             // LoginForm
             // 
+            this.AcceptButton = this.LoginButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(478, 372);
+            this.ControlBox = false;
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.LoginButton);
             this.Controls.Add(this.passwordLabel);
             this.Controls.Add(this.userNameLabel);
             this.Controls.Add(this.passwordTxt);
             this.Controls.Add(this.userNameTxt);
+            this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
             this.Name = "LoginForm";
             this.Text = "LoginForm";
             this.ResumeLayout(false);
