@@ -9,6 +9,8 @@ namespace dreamClock
     {
         public bool LoginSuccessful { get; private set; }
         public int UserRoleID { get; private set; }
+        public int UserLoginID { get; private set; }
+        public int EmployeeID { get; private set; }
         public bool IsUserCEO { get; private set; } // Property to determine if the user is a CEO
 
         public LoginForm()
@@ -46,7 +48,7 @@ namespace dreamClock
         {
             var datasource = @"DESKTOP-0ANVP6M";
             var database = "IT488_Tech_Solutions";
-            var connString = $"Data Source={datasource};Initial Catalog={database};Integrated Security=True";
+            var connString = $"Data Source={datasource};Initial Catalog={database};Integrated Security=True;Encrypt=False";
 
             using (var conn = new SqlConnection(connString))
             {
@@ -54,7 +56,11 @@ namespace dreamClock
                 {
                     conn.Open();
                     // Adjusted to include RoleID in the SELECT to check for CEO role later
-                    string sql = "SELECT EmployeeID, RoleID FROM Employees WHERE Username = @username AND Password = @password";
+                    string sql = @"
+                        SELECT e.EmployeeID, e.RoleID, l.LoginID 
+                        FROM Employees e 
+                        INNER JOIN Login l ON e.EmployeeID = l.EmployeeID 
+                        WHERE e.Username = @username AND e.Password = @password";
 
                     using (var cmd = new SqlCommand(sql, conn))
                     {
@@ -68,6 +74,8 @@ namespace dreamClock
                                 MessageBox.Show("Login Successful");
                                 this.LoginSuccessful = true;
                                 this.UserRoleID = reader.GetInt32(reader.GetOrdinal("RoleID"));
+                                this.EmployeeID = reader.GetInt32(reader.GetOrdinal("EmployeeID"));
+                                this.UserLoginID = reader.GetInt32(reader.GetOrdinal("LoginID"));
                                 // Check if the logged-in user is a CEO
                                 // Assuming that the CEO's RoleID is known, e.g., 1
                                 this.IsUserCEO = this.UserRoleID == 1;

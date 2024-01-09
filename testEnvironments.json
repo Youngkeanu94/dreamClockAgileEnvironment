@@ -1,0 +1,48 @@
+﻿{
+  "version": "1",
+  "environments": [
+    [ "TestFixture" ],
+    "public",
+    "class",
+    "TimeTrackingTests",
+    {
+      "private" "Mock<IDatabaseService>",
+      "_databaseServiceMock;" "private",
+      "MainForm" "_mainForm;",
+
+      [ "SetUp" ],
+      "public" "void",
+      "Setup()" {
+        // Arrange
+        "_databaseServiceMock" "=",
+        "new" "Mock<IDatabaseService>();",
+        "_mainForm" "=",
+        "new" "MainForm(_databaseServiceMock.Object);"
+      },
+
+      [ "Test" ],
+      "public" "void",
+      "ClockIn_ShouldCallDatabaseService()" {
+        // Act
+        "_mainForm.ClockIn();"
+
+        // Assert
+        "_databaseServiceMock.Verify(service",
+        "=>" "service.ClockIn(It.IsAny<int>())",
+        "Times.Once());"
+      },
+
+      [ "Test" ],
+      "public" "void",
+      "ClockOut_ShouldCallDatabaseService()" {
+        // Act
+        "_mainForm.ClockOut();"
+
+        // Assert
+        "_databaseServiceMock.Verify(service",
+        "=>" "service.ClockOut(It.IsAny<int>())",
+        "Times.Once());"
+      }
+    }
+
+}

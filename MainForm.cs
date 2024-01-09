@@ -14,8 +14,8 @@ namespace dreamClock
 {
     public partial class MainForm : Form
     {
-        private int userEmployeeID;
-        private bool isCEO; // A flag to indicate if the logged-in user is the CEO
+        private readonly int userEmployeeID;
+        private readonly bool isCEO; // A flag to indicate if the logged-in user is the CEO
 
         public MainForm(int employeeID, bool isCEO) // Pass the isCEO flag
         {
@@ -32,15 +32,17 @@ namespace dreamClock
             // you don't need to call it here unless you want to refresh the data.
         }
 
+
         private void LoadEmployeeHours()
         {
             dataGridView1.DataSource = GetEmployeeHoursBasedOnRole(userEmployeeID, isCEO);
+          
         }
 
         private DataTable GetEmployeeHoursBasedOnRole(int employeeID, bool isCEO)
         {
             DataTable dataTable = new DataTable();
-            string connString = "Data Source=DESKTOP-0ANVP6M;Initial Catalog=IT488_Tech_Solutions;Integrated Security=True";
+            string connString = "Data Source=DESKTOP-0ANVP6M;Initial Catalog=IT488_Tech_Solutions;Integrated Security=True;Encrypt=False";
             string query;
 
             if (isCEO)
@@ -77,7 +79,7 @@ namespace dreamClock
                 WHERE 
                    e.EmployeeID = @employeeID"; // Filter by the logged-in employee's ID
             }
-
+                
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -101,6 +103,18 @@ namespace dreamClock
                     }
                 }
             }
+            foreach (DataRow row in dataTable.Rows)
+            {
+                if (row["PunchInTime"] != DBNull.Value)
+                {
+                    row["PunchInTime"] = ((DateTime)row["PunchInTime"]).ToString("g"); // General date and time format
+                }
+
+                if (row["PunchOutTime"] != DBNull.Value)
+                {
+                    row["PunchOutTime"] = ((DateTime)row["PunchOutTime"]).ToString("g");
+                }
+            }
 
             return dataTable;
         }
@@ -109,6 +123,80 @@ namespace dreamClock
         {
             // Typically used for when a cell in the DataGridView is clicked
             // If you need specific functionality when clicking a cell, implement it here
+        }
+
+
+        private void ClockIn_Click(object sender, EventArgs e)
+        {
+            
+
+            string connString = "Data Source=DESKTOP-0ANVP6M;Initial Catalog=IT488_Tech_Solutions;Integrated Security=True;Encrypt=False";
+            string query = "INSERT INTO EmployeePunches (EmployeeID, PunchInTime) VALUES (@employeeID, @punchInTime)";
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@employeeID", userEmployeeID);
+                    cmd.Parameters.AddWithValue("@punchInTime", DateTime.Now);
+
+                    try
+                    {
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Clocked In Successfully");
+                    }
+                    catch (SqlException ex)
+                    {
+                        MessageBox.Show("Error clocking in: " + ex.Message);
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                }
+            }
+            LoadEmployeeHours();
+        }
+
+        private void ClockOut_Click(object sender, EventArgs e)
+        {
+         
+
+            string connString = "Data Source=DESKTOP-0ANVP6M;Initial Catalog=IT488_Tech_Solutions;Integrated Security=True;Encrypt=False";
+            string query = "UPDATE EmployeePunches SET PunchOutTime = @punchOutTime WHERE EmployeeID = @employeeID AND PunchOutTime IS NULL";
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@employeeID", userEmployeeID);
+                    cmd.Parameters.AddWithValue("@punchOutTime", DateTime.Now);
+
+                    try
+                    {
+                        conn.Open();
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show("Clocked Out Successfully");
+                        }
+                        else
+                        {
+                            MessageBox.Show("No clock in record found to clock out");
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        MessageBox.Show("Error clocking out: " + ex.Message);
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                }
+            }
+            LoadEmployeeHours();
         }
     }
 }
