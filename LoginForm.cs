@@ -29,7 +29,7 @@ namespace dreamClock
                 return;
             }
 
-            if (password.Length < 8)
+            if (password.Length < 5)
             {
                 MessageBox.Show("Password must be at least 8 characters in length.");
                 return;
