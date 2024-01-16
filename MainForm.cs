@@ -42,7 +42,7 @@ namespace dreamClock
         private DataTable GetEmployeeHoursBasedOnRole(int employeeID, bool isCEO)
         {
             DataTable dataTable = new DataTable();
-            string connString = "Data Source=DESKTOP-0ANVP6M;Initial Catalog=IT488_Tech_Solutions;Integrated Security=True;Encrypt=False";
+            string connString = "Data Source=DESKTOP-0ANVP6M\\NORTH_WIND;Initial Catalog=Qwerty;Integrated Security=True;Encrypt=False";
             string query;
 
             if (isCEO)
@@ -130,7 +130,7 @@ namespace dreamClock
         {
             
 
-            string connString = "Data Source=DESKTOP-0ANVP6M;Initial Catalog=IT488_Tech_Solutions;Integrated Security=True;Encrypt=False";
+            string connString = "Data Source=DESKTOP-0ANVP6M\\NORTH_WIND;Initial Catalog=Qwerty;Integrated Security=True;Encrypt=False";
             string query = "INSERT INTO EmployeePunches (EmployeeID, PunchInTime) VALUES (@employeeID, @punchInTime)";
 
             using (SqlConnection conn = new SqlConnection(connString))
@@ -163,7 +163,7 @@ namespace dreamClock
         {
          
 
-            string connString = "Data Source=DESKTOP-0ANVP6M;Initial Catalog=IT488_Tech_Solutions;Integrated Security=True;Encrypt=False";
+            string connString = "Data Source=DESKTOP-0ANVP6M\\NORTH_WIND;Initial Catalog=Qwerty;Integrated Security=True;Encrypt=False";
             string query = "UPDATE EmployeePunches SET PunchOutTime = @punchOutTime WHERE EmployeeID = @employeeID AND PunchOutTime IS NULL";
 
             using (SqlConnection conn = new SqlConnection(connString))

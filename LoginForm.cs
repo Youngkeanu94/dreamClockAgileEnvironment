@@ -46,9 +46,10 @@ namespace dreamClock
 
         private void AttemptLogin(string username, string password)
         {
-            var datasource = @"DESKTOP-0ANVP6M";
-            var database = "IT488_Tech_Solutions";
+            var datasource = @"DESKTOP-0ANVP6M\NORTH_WIND"; // Note the addition of \NORTH_WIND
+            var database = "Qwerty"; // Updated database name
             var connString = $"Data Source={datasource};Initial Catalog={database};Integrated Security=True;Encrypt=False";
+
 
             using (var conn = new SqlConnection(connString))
             {
@@ -100,10 +101,11 @@ namespace dreamClock
 
         private bool IsValidInput(string input)
         {
-            Regex regex = new Regex("^[a-zA-Z0-9_]*$");
-            return regex.IsMatch(input);
+            //This regex matches strings that consist of only letters and numbers.
+            //Regex regex = new Regex("^[a-zA-Z0-9]+$");
+            //return regex.IsMatch(input);
+            return true;
         }
-
         private void CancelButton_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;

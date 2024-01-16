@@ -114,7 +114,7 @@
             this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
             this.Name = "LoginForm";
-            this.Text = "LoginForm";
+            this.Text = "2";
             this.ResumeLayout(false);
             this.PerformLayout();
 
