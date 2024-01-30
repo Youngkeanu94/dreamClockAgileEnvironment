@@ -1,4 +1,4 @@
-This C# application was developed in an Agile environment by the "The Dream Team" over 8 weeks.
+This C# application was developed in an Agile environment by the "The Dream Team" over 8 weeks. You can find the product backlog, DFD, and all other designs/documentation in the files!
 The provided C# code constitutes a comprehensive Windows Forms application for a time-tracking system. It is designed to manage employee working hours, with specific functionalities tailored to different user roles, including a CEO. Here’s a detailed breakdown:
 
 MainForm Class
