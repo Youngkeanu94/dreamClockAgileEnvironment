@@ -21,6 +21,4 @@ Database Integration: Utilizes SQL Server (SqlConnection, SqlCommand, etc.) for 
 Security: Includes basic security measures for login.
 Error Handling: Implements try-catch blocks to handle SQL exceptions.
 
-Possible Enhancements
-Input Validation: Enhance validation in LoginForm to prevent SQL injection.
-Password Security: Store and verify hashed passwords rather than plain text.
+Db includes passwords
